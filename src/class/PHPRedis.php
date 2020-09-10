@@ -27,6 +27,7 @@ class PHPRedis
    */
   public function set($data){
     $this->redis->setEx($this->key,$this->expire,json_encode($data));
+    return $this;
   }
   /**
    * get data from redis, always as an array or string
@@ -51,6 +52,7 @@ class PHPRedis
     }else {
       $this->redis->delete($this->key);
     }
+    return $this;
   }
 
   /**
