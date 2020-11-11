@@ -5,6 +5,7 @@ class PHPRedis
 {
   protected $redis;//redis instance
   protected $key;//the key name to store
+  protected $database=0;//the database to use
   protected $expire=86400;//expire time count second, default is a day
 
   /**
@@ -26,6 +27,7 @@ class PHPRedis
    * @param any $data [the data want to storage]
    */
   public function set($data){
+    $this->redis->select($this->database);
     $this->redis->setEx($this->key,$this->expire,json_encode($data));
     return $this;
   }
@@ -34,6 +36,7 @@ class PHPRedis
    * @return array/string [the data]
    */
   public function get(){
+    $this->redis->select($this->database);
     $data=$this->redis->get($this->key);
     if (!empty($data)) {
       $data=json_decode($data,true);
@@ -47,6 +50,7 @@ class PHPRedis
    * @return null
    */
   public function del(){
+    $this->redis->select($this->database);
     if (method_exists($this->redis,'del')) {
       $this->redis->del($this->key);
     }else {
