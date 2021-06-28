@@ -6,19 +6,14 @@
     "php": ">=7.1"
   },
   "license": "MIT",
-  "authors": [
-    {
-      "name": "lizus",
-      "email": "lizus.com@gmail.com"
-    }
-  ],
+  "authors": [{
+    "name": "lizus",
+    "email": "lizus.com@gmail.com"
+  }],
   "minimum-stability": "dev",
-  "autoload":{
-    "psr-4":{
-      "Lizus\\PHPRedis\\":"src/class/"
-    },
-    "files":[
-      "src/function/get_redis.php"
-    ]
+  "autoload": {
+    "psr-4": {
+      "Lizus\\PHPRedis\\": "src/class/"
+    }
   }
 }
