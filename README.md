@@ -33,7 +33,10 @@ use \Lizus\PHPRedis\PHPRedis;
 
 class SampleRedis extends PHPRedis 
 {
-    $protected $database=1; //Not necessary
+    protected $database=1; //Not necessary 自定义数据库
+    protected $host='127.0.0.1'; //Not necessary 自定义host
+    protected $port='6379'; //Not necessary 自定义port
+    protected $auth='***'; //Not necessary 自定义auth
 }
 
 
@@ -44,12 +47,4 @@ $redis->select(1);//chose database, not necessary
 $redis->set('sample data');
 
 var_dump($redis->get());
-```
-
-if just wanna get redis instance:
-
-```php
-use function \Lizus\PHPRedis\get_redis;
-$redis=get_redis();
-var_dump($redis->keys('*'));
 ```

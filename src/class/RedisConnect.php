@@ -10,30 +10,41 @@ use to connect redis server
 see `get_redis`
 */
 
-if (!defined('PHPREDIS_HOST')) define('PHPREDIS_HOST', '127.0.0.1');
-if (!defined('PHPREDIS_PORT')) define('PHPREDIS_PORT', '6379');
-
 class RedisConnect
 {
   private static $_instance;
   protected $_redis;
-  private function __construct() {
-      $redis=new \Redis;
-      $redis->connect(PHPREDIS_HOST,PHPREDIS_PORT);
-      if (defined('PHPREDIS_AUTH')) $redis->auth(PHPREDIS_AUTH);
-      if (defined('PHPREDIS_DATABASE')) $redis->select(PHPREDIS_DATABASE);
-      $this->_redis=$redis;
+  private function __construct($args=[]) {
+    $default=[
+      'host'=>'127.0.0.1',
+      'port'=>'6379',
+      'auth'=>'',
+      'database'=>0,
+    ];
+    $args=array_merge($default,$args);
+    $redis=new \Redis;
+    $redis->connect($args['host'],$args['port']);
+    if (!empty($args['auth'])) $redis->auth($args['auth']);
+    $redis->select(intval($args['database']));
+    
+    $this->_redis=$redis;
   }
   private function __clone() {
     trigger_error('Clone is not allow!',E_USER_ERROR);
   }
-  public static function getInstance(){
-    if (!self::$_instance instanceof self) {
-      self::$_instance=new self;
+  protected static function createKey($args){
+    $key=\md5(\json_encode($args));
+    if (empty($key)) $key='default';
+    return $key;
+  }
+  public static function getInstance($args=[]){
+    $key=self::createKey($args);
+    if (!isset(self::$_instance[$key]) || !self::$_instance[$key] instanceof self) {
+      self::$_instance[$key]=new self($args);
     }
-    return self::$_instance;
+    return self::$_instance[$key];
   }
   public function getRedis(){
     return $this->_redis;
-  }
+  } 
 }

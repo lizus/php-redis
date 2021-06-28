@@ -5,8 +5,11 @@ class PHPRedis
 {
   protected $redis;//redis instance
   protected $key;//the key name to store
-  protected $database=0;//the database to use
   protected $expire=86400;//expire time count second, default is a day
+  protected $host='';//redis服务器IP,默认127.0.0.1
+  protected $port='';//端口,默认6379
+  protected $auth='';//密码
+  protected $database=0;//选择数据库，一般为0-10
 
   /**
    * initialize
@@ -18,7 +21,27 @@ class PHPRedis
    */
   function __construct($name,$exp=0)
   {
-    $this->redis=get_redis();
+    $args=[];
+    if(!empty($this->host)) {
+      $args['host']=$this->host;
+    }else {
+      if(\defined('PHPREDIS_HOST')) $args['host']=PHPREDIS_HOST;
+    }
+    if(!empty($this->port)) {
+      $args['port']=$this->port;
+    }else {
+      if(\defined('PHPREDIS_PORT')) $args['port']=PHPREDIS_PORT;
+    }
+    if(!empty($this->auth)) {
+      $args['auth']=$this->auth;
+    }else {
+      if(\defined('PHPREDIS_AUTH')) $args['auth']=PHPREDIS_AUTH;
+    }
+    $args['database']=intval($this->database);
+
+    $redis=RedisConnect::getInstance($args);
+    $this->redis=$redis->getRedis();
+
     $this->key=$this->create_key($name);
     if($exp>0) $this->expire=$exp;
   }
