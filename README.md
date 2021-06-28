@@ -40,11 +40,9 @@ class SampleRedis extends PHPRedis
 }
 
 
-$redis=new SampleRedis('sampleName');
+$a=new SampleRedis('sampleName');
 
-$redis->select(1);//chose database, not necessary
+$a->set('sample data');
 
-$redis->set('sample data');
-
-var_dump($redis->get());
+var_dump($a->get());
 ```

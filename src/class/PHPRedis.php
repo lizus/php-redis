@@ -45,17 +45,6 @@ class PHPRedis
     $this->key=$this->create_key($name);
     if($exp>0) $this->expire=$exp;
   }
-  
-  /**
-   * select
-   * 选择redis数据库
-   * @param  int $num
-   * @return $this
-   */
-  public function select($num){
-    if($num>0) $this->database=intval($num);
-    return $this;
-  }
   /**
    * set data to redis
    * @param any $data [the data want to storage]
